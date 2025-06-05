@@ -1,0 +1,16 @@
+<?php
+
+namespace App\Service\{{model_lower}};
+
+interface {{model}}Interfaces
+{
+    public function index{{model}}();
+    public function store{{model}}($request);
+    public function show{{model}}($id);
+    public function update{{model}}($request, $id);
+    public function trash{{model}}($id);
+    public function restore{{model}}($id);
+    public function destroy{{model}}($id);
+    public function replicate($id, $jml = 1);
+    public function createFaker($jml = 1);
+}

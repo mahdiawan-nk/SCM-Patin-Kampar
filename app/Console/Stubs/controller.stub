@@ -1,0 +1,205 @@
+<?php
+
+namespace App\Http\Controllers\Api;
+
+use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
+use App\Service\Pembudiaya\{{service}};
+use App\Http\Requests\{{request}};
+use App\Http\Resources\{{resource}};
+use App\Models\{{model}};
+
+class {{controller}} extends Controller
+{
+    protected ${{service}};
+
+    public function __construct({{service}} ${{service}})
+    {
+        $this->{{service}} = ${{service}};
+    }
+
+    public function index()
+    {
+        return response()->json(
+            [
+                'status' => 'success',
+                'message' => 'Data {{model}}',
+                'data' => new {{resource}}($this->{{service}}->index{{model}}())
+            ],
+            200
+        );
+    }
+
+    public function store({{request}} $request)
+    {
+        try {
+            $this->{{service}}->store{{model}}($request);
+            return response()->json(
+                [
+                    'status' => 'success',
+                    'message' => 'Data {{model}}',
+                ],
+                200
+            );
+        } catch (\Throwable $th) {
+            return response()->json(
+                [
+                    'status' => 'error',
+                    'message' => 'Data {{model}}',
+                    'data' => $th->getMessage()
+                ],
+                500
+            );
+        }
+    }
+
+    public function show(string $id)
+    {
+        return response()->json(
+            [
+                'status' => 'success',
+                'message' => 'Data {{model}}',
+                'data' => new {{resource}}($this->{{service}}->show{{model}}($id))
+            ]
+        );
+    }
+
+    public function update(Request $request, string $id)
+    {
+        try {
+            $this->{{service}}->update{{model}}($request, $id);
+            return response()->json(
+                [
+                    'status' => 'success',
+                    'message' => 'Data {{model}}',
+                ],
+                200
+            );
+        } catch (\Throwable $th) {
+            return response()->json(
+                [
+                    'status' => 'error',
+                    'message' => 'Data {{model}}',
+                    'data' => $th->getMessage()
+                ],
+                500
+            );
+        }
+    }
+
+    public function destroy(string $id)
+    {
+        try {
+            $this->{{service}}->destroy{{model}}($id);
+            return response()->json(
+                [
+                    'status' => 'success',
+                    'message' => 'Data {{model}}',
+                ],
+                200
+            );
+        } catch (\Throwable $th) {
+            return response()->json(
+                [
+                    'status' => 'error',
+                    'message' => 'Data {{model}}',
+                    'data' => $th->getMessage()
+                ],
+                500
+            );
+        }
+    }
+
+    public function trash(string $id)
+    {
+        try {
+            $this->{{service}}->trash{{model}}($id);
+            return response()->json(
+                [
+                    'status' => 'success',
+                    'message' => 'Data {{model}}',
+                ],
+                200
+            );
+        } catch (\Throwable $th) {
+            return response()->json(
+                [
+                    'status' => 'error',
+                    'message' => 'Data {{model}}',
+                    'data' => $th->getMessage()
+                ],
+                500
+            );
+        }
+    }
+
+    public function restore(string $id)
+    {
+        try {
+            $this->{{service}}->restore{{model}}($id);
+            return response()->json(
+                [
+                    'status' => 'success',
+                    'message' => 'Data {{model}}',
+                ],
+                200
+            );
+        } catch (\Throwable $th) {
+            return response()->json(
+                [
+                    'status' => 'error',
+                    'message' => 'Data {{model}}',
+                    'data' => $th->getMessage()
+                ],
+                500
+            );
+        }
+    }
+
+    public function replicate(Request $request, string $id)
+    {
+        try {
+            $this->{{service}}->replicate($id, $request->jml);
+            return response()->json(
+                [
+                    'status' => 'success',
+                    'message' => 'Data {{model}}',
+                    'data' => new {{resource}}($this->{{service}}->replicate($id, $request->jml))
+                ],
+                200
+            );
+        } catch (\Throwable $th) {
+            return response()->json(
+                [
+                    'status' => 'error',
+                    'message' => 'Data {{model}}',
+                    'data' => $th->getMessage()
+                ],
+                500
+            );
+        }
+    }
+
+    public function createFaker(Request $request)
+    {
+        try {
+            $this->{{service}}->createFaker($request->jml ?? 1);
+            return response()->json(
+                [
+                    'status' => 'success',
+                    'message' => 'Data Faker {{model}} Berhasil Dibuat',
+                ],
+                200
+            );
+        } catch (\Throwable $th) {
+            return response()->json(
+                [
+                    'status' => 'error',
+                    'message' => 'Data {{model}}',
+                    'data' => $th->getMessage()
+                ],
+                500
+            );
+        }
+    }
+}
