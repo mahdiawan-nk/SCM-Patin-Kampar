@@ -9,6 +9,7 @@ export default {
         './vendor/laravel/jetstream/**/*.blade.php',
         './storage/framework/views/*.php',
         './resources/views/**/*.blade.php',
+        './vendor/diogogpinto/filament-auth-ui-enhancer/resources/**/*.blade.php',
     ],
 
     theme: {

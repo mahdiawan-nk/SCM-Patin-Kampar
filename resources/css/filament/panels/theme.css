@@ -15,18 +15,18 @@
 }
 
 .fi-sidebar-header {
-    @apply bg-stone-100 flex h-16 items-center px-6 ring-1 ring-stone-100/100 dark:bg-gray-900 dark:ring-white/100 border-r border-stone-400;
+    @apply bg-[#90e0ef] flex h-16 items-center px-6 ring-1 ring-stone-100/100 dark:bg-gray-900 dark:ring-white/100 border-r border-stone-400;
 }
 .fi-sidebar-nav {
-    @apply bg-stone-100 border-r border-stone-400;
+    @apply bg-[#90e0ef] border-r border-stone-400 no-scrollbar;
 }
 
 .fi-topbar {
-    @apply bg-stone-100 border-b border-stone-400;
+    @apply bg-[#90e0ef] border-b border-stone-400;
 }
 
 .fi-topbar nav {
-    @apply bg-stone-100;
+    @apply bg-[#90e0ef];
 }
 
 .fi-main,
@@ -40,4 +40,36 @@
 .no-scrollbar {
     -ms-overflow-style: none; /* IE and Edge */
     scrollbar-width: none; /* Firefox */
+}
+
+/* Empty panel wrapper */
+.custom-auth-empty-panel {
+    width: var(--empty-panel-width);
+    background-color: var(--empty-panel-background-color);
+}
+.custom-auth-empty-panel div{
+    background-repeat: no-repeat;
+    background-size: var(--image-size);
+}
+ 
+.custom-auth-form-panel {
+    width: var(--form-panel-width);
+    background-color: var(--form-panel-background-color);
+}
+
+@media screen and (max-width: 720px) {
+    .custom-auth-empty-panel {
+        width: 100%;
+        background-color: var(--empty-panel-background-color);
+    }>favicon(asset('images/favicon.png'))
+    .custom-auth-empty-panel div{
+        background-repeat: no-repeat;
+        background-size: var(--image-size);
+    }
+    
+    .custom-auth-form-panel {
+        width: 100%;
+        background-color: var(--form-panel-background-color);
+    }
+    
 }

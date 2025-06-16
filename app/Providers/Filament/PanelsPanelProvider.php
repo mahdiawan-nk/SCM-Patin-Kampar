@@ -26,6 +26,7 @@ use App\Filament\Pages\ManageBudidaya\MonitoringHealthBenih;
 use App\Filament\Pages\ManageBudidaya\SchedulBudidaya;
 use App\Filament\Pages\ManageBudidaya\HarvestEstimation;
 use App\Filament\Pages\ManageBudidaya\HarvestRealization;
+use DiogoGPinto\AuthUIEnhancer\AuthUIEnhancerPlugin;
 
 class PanelsPanelProvider extends PanelProvider
 {
@@ -39,6 +40,7 @@ class PanelsPanelProvider extends PanelProvider
             ->login()
             ->breadcrumbs(false)
             ->viteTheme('resources/css/filament/panels/theme.css')
+            ->favicon(asset('static-file/favicon.ico'))
             ->maxContentWidth('full')
             ->colors([
                 'primary' => Color::Amber,
@@ -179,6 +181,17 @@ class PanelsPanelProvider extends PanelProvider
                 //     ->icon('heroicon-o-chat-bubble-left-right')
                 //     ->group('Managemen Stok')
                 //     ->sort(5),
+            ])
+            ->plugins([
+                AuthUIEnhancerPlugin::make()
+                    ->showEmptyPanelOnMobile(false)
+                    ->formPanelPosition('right')
+                    ->formPanelWidth('40%')
+                    ->formPanelBackgroundColor(Color::Slate)
+                    ->emptyPanelWidth('60%')
+                    ->emptyPanelBackgroundImageUrl(asset('static-file/auth-bg-1.jpg'))
+                    ->emptyPanelBackgroundImageSize('cover')
+                    ->emptyPanelBackgroundColor(Color::Slate)
             ])
             ->middleware([
                 EncryptCookies::class,
