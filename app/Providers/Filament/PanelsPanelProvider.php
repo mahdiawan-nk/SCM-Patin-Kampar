@@ -183,15 +183,15 @@ class PanelsPanelProvider extends PanelProvider
                 //     ->sort(5),
             ])
             ->plugins([
-                AuthUIEnhancerPlugin::make()
-                    ->showEmptyPanelOnMobile(false)
-                    ->formPanelPosition('right')
-                    ->formPanelWidth('40%')
-                    ->formPanelBackgroundColor(Color::Slate)
-                    ->emptyPanelWidth('60%')
-                    ->emptyPanelBackgroundImageUrl(asset('static-file/auth-bg-1.jpg'))
-                    ->emptyPanelBackgroundImageSize('cover')
-                    ->emptyPanelBackgroundColor(Color::Slate)
+                // AuthUIEnhancerPlugin::make()
+                //     ->showEmptyPanelOnMobile(false)
+                //     ->formPanelPosition('right')
+                //     ->formPanelWidth('40%')
+                //     ->formPanelBackgroundColor(Color::Slate)
+                //     ->emptyPanelWidth('60%')
+                //     ->emptyPanelBackgroundImageUrl(asset('static-file/auth-bg-1.jpg'))
+                //     ->emptyPanelBackgroundImageSize('cover')
+                //     ->emptyPanelBackgroundColor(Color::Slate)
             ])
             ->middleware([
                 EncryptCookies::class,
