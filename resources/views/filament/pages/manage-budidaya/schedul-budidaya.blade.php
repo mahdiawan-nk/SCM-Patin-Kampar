@@ -208,8 +208,8 @@
         </div>
     </div>
 
-    <div wire:show="showModal" x-cloak x-transition.opacity.duration.200ms x-trap.inert.noscroll="modalIsOpen"
-        x-on:keydown.esc.window="modalIsOpen = false" x-on:click.self="modalIsOpen = false"
+    <div wire:show="showModal" x-cloak x-transition.opacity.duration.200ms x-trap.inert.noscroll="showModal"
+        x-on:keydown.esc.window="showModal = false" x-on:click.self="showModal = false"
         class="fixed inset-0 z-30 flex items-end justify-center bg-black/20 p-4 pb-8 backdrop-blur-sm md:inset-0 sm:items-center lg:p-8"
         role="dialog" aria-modal="true" aria-labelledby="defaultModalTitle">
         <!-- Modal Dialog -->
