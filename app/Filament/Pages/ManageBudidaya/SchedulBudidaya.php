@@ -64,7 +64,7 @@ class SchedulBudidaya extends Page implements HasForms
                         'harvest' => 'Pengumpulan Hasil (Panen)',
                     ])
                     ->columns(2),
-                Forms\Components\TextArea::make('title') // Forms\Components\Text::make('note')
+                Forms\Components\TextInput::make('title') // Forms\Components\Text::make('note')
                     ->columnSpanFull(),
                 Forms\Components\DatePicker::make('schedule_at')
                     ->required(),
