@@ -70,7 +70,7 @@ class SchedulBudidaya extends Page implements HasForms
                     ->required(),
                 Forms\Components\TimePicker::make('reminder_at')
                     ->required(),
-                Forms\Components\TextArea::make('note') // Forms\Components\Text::make('note')
+                Forms\Components\TextInput::make('note') // Forms\Components\Text::make('note')
                     ->columnSpanFull(),
 
             ])
