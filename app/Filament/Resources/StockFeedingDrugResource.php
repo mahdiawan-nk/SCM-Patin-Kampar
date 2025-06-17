@@ -18,6 +18,8 @@ class StockFeedingDrugResource extends Resource
     protected static ?string $model = StockFeedingDrug::class;
     protected static ?string $navigationGroup = 'Management Budidaya (Hulu)';
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static bool $shouldRegisterNavigation = false;
+
     protected static ?int $navigationSort = 4;
     public static function form(Form $form): Form
     {

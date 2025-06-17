@@ -7,6 +7,7 @@ use Filament\Forms\Concerns\InteractsWithForms;
 use Filament\Forms\Contracts\HasForms;
 use Filament\Forms\Form;
 use Filament\Forms;
+use Filament\Forms\Components\{Textarea,TextInput,Select,Radio,DatePicker,TimePicker};
 use App\Models\SchedulBudidaya as JadwalBudidaya;
 use App\Models\KolamBudidaya;
 use Livewire\Attributes\On;
@@ -44,11 +45,11 @@ class SchedulBudidaya extends Page implements HasForms
     {
         return $form
             ->schema([
-                Forms\Components\Select::make('kolam_budidaya_id')
+                Select::make('kolam_budidaya_id')
                     ->relationship('kolam_budidaya', 'nama_kolam')
                     ->columnSpanFull()
                     ->required(),
-                Forms\Components\Radio::make('activity_type')
+                Radio::make('activity_type')
                     ->required()
                     ->columnSpanFull()
                     ->options([
@@ -64,13 +65,13 @@ class SchedulBudidaya extends Page implements HasForms
                         'harvest' => 'Pengumpulan Hasil (Panen)',
                     ])
                     ->columns(2),
-                Forms\Components\TextArea::make('title') // Forms\Components\Text::make('note')
+                Textarea::make('title') // Text::make('note')
                     ->columnSpanFull(),
-                Forms\Components\DatePicker::make('schedule_at')
+                DatePicker::make('schedule_at')
                     ->required(),
-                Forms\Components\TimePicker::make('reminder_at')
+                TimePicker::make('reminder_at')
                     ->required(),
-                Forms\Components\TextArea::make('note') // Forms\Components\Text::make('note')
+                Textarea::make('note') // Forms\Components\Text::make('note')
                     ->columnSpanFull(),
 
             ])
