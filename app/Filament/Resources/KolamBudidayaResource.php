@@ -129,12 +129,12 @@ class KolamBudidayaResource extends Resource
                     Tables\Actions\DeleteAction::make(),
                     Tables\Actions\ForceDeleteAction::make(),
                     Tables\Actions\RestoreAction::make(),
-                    Tables\Actions\Action::make('monitoring')
-                        ->icon('heroicon-o-presentation-chart-line')
-                        ->url(fn(KolamBudidaya $record): string => self::getUrl('monitoring', ['record' => $record->getKey()])),
-                    Tables\Actions\Action::make('siklus')
-                        ->icon('heroicon-o-presentation-chart-line')
-                        ->url(fn(KolamBudidaya $record): string => self::getUrl('siklus', ['record' => $record->getKey()])),
+                    // Tables\Actions\Action::make('monitoring')
+                    //     ->icon('heroicon-o-presentation-chart-line')
+                    //     ->url(fn(KolamBudidaya $record): string => self::getUrl('monitoring', ['record' => $record->getKey()])),
+                    // Tables\Actions\Action::make('siklus')
+                    //     ->icon('heroicon-o-presentation-chart-line')
+                    //     ->url(fn(KolamBudidaya $record): string => self::getUrl('siklus', ['record' => $record->getKey()])),
                 ])
                     ->extraAttributes(['id' => 'btn-costum'])
                     ->button()

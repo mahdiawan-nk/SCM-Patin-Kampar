@@ -64,13 +64,13 @@ class SchedulBudidaya extends Page implements HasForms
                         'harvest' => 'Pengumpulan Hasil (Panen)',
                     ])
                     ->columns(2),
-                Forms\Components\TextInput::make('title') // Forms\Components\Text::make('note')
+                Forms\Components\TextArea::make('title') // Forms\Components\Text::make('note')
                     ->columnSpanFull(),
                 Forms\Components\DatePicker::make('schedule_at')
                     ->required(),
                 Forms\Components\TimePicker::make('reminder_at')
                     ->required(),
-                Forms\Components\TextInput::make('note') // Forms\Components\Text::make('note')
+                Forms\Components\TextArea::make('note') // Forms\Components\Text::make('note')
                     ->columnSpanFull(),
 
             ])
