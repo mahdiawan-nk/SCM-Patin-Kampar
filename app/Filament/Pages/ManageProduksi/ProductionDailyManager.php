@@ -23,6 +23,7 @@ class ProductionDailyManager extends Page implements HasTable, HasForms
     use InteractsWithTable, InteractsWithForms;
 
     protected static ?string $navigationIcon = 'heroicon-o-cube-transparent';
+    protected static bool $shouldRegisterNavigation = false;
     protected static ?string $title = 'Daily Productions';
     protected static string $view = 'filament.pages.manage-produksi.production-daily-manager';
     protected static ?int $navigationSort = 4;

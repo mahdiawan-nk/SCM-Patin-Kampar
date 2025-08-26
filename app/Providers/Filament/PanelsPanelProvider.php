@@ -94,13 +94,13 @@ class PanelsPanelProvider extends PanelProvider
                     ->parentItem('Siklus Budidaya')
                     ->group('Management Budidaya (Hulu)')
                     ->sort(3),
-                NavigationItem::make('Monitoring Kesehatan Benih')
-                    ->url(fn(): string => MonitoringHealthBenih::getUrl())
-                    ->isActiveWhen(fn(): bool => request()->routeIs('filament.panels.pages.monitoring-health-benih'))
-                    ->icon('heroicon-o-computer-desktop')
-                    ->parentItem('Siklus Budidaya')
-                    ->group('Management Budidaya (Hulu)')
-                    ->sort(4),
+                // NavigationItem::make('Monitoring Kesehatan Benih')
+                //     ->url(fn(): string => MonitoringHealthBenih::getUrl())
+                //     ->isActiveWhen(fn(): bool => request()->routeIs('filament.panels.pages.monitoring-health-benih'))
+                //     ->icon('heroicon-o-computer-desktop')
+                //     ->parentItem('Siklus Budidaya')
+                //     ->group('Management Budidaya (Hulu)')
+                //     ->sort(4),
                 NavigationItem::make('Jadwal Budidaya')
                     ->url(fn(): string => SchedulBudidaya::getUrl())
                     ->isActiveWhen(fn(): bool => request()->routeIs('filament.panels.pages.schedul-budidaya'))

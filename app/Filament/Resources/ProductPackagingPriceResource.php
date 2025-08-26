@@ -18,7 +18,7 @@ class ProductPackagingPriceResource extends Resource
     protected static ?string $model = ProductPackagingPrice::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-shopping-bag';
-
+    protected static bool $shouldRegisterNavigation = false;
     protected static ?string $modelLabel = 'Harga Kemasan Produk';
 
     protected static ?string $navigationLabel = 'Harga Kemasan';

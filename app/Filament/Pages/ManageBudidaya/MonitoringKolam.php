@@ -17,6 +17,7 @@ use Filament\Tables;
 use Filament\Support\Enums\MaxWidth;
 use Filament\Notifications\Notification;
 use Filament\Actions\Action;
+use App\Models\Pembudidaya;
 
 class MonitoringKolam extends Page implements HasForms, HasTable
 {
@@ -35,10 +36,13 @@ class MonitoringKolam extends Page implements HasForms, HasTable
     public $perPage = 3;
     public $currentPage = 1;
     public $search = '';
+    public $selectPembudidaya;
+    public $listPembudidaya;
     public function mount(): void
     {
         $this->form->fill();
         $this->dataKolam = KolamBudidaya::withTrashed()->get();
+        $this->listPembudidaya = Pembudidaya::all();
     }
 
     protected function getHeaderActions(): array
@@ -83,6 +87,10 @@ class MonitoringKolam extends Page implements HasForms, HasTable
 
         $query = KolamBudidaya::withTrashed();
 
+        if (!empty($this->selectPembudidaya) && $this->selectPembudidaya != 'all') {
+            $query->where('pembudidaya_id', $this->selectPembudidaya);
+        }
+
         if (!empty($this->search)) {
             $query->where('nama_kolam', 'like', '%' . $this->search . '%');
         }
@@ -98,6 +106,11 @@ class MonitoringKolam extends Page implements HasForms, HasTable
     public function getTotalPagesProperty()
     {
         $query = KolamBudidaya::withTrashed();
+
+        if (!empty($this->selectPembudidaya) && $this->selectPembudidaya != 'all') {
+            $query->where('pembudidaya_id', $this->selectPembudidaya);
+        }
+
 
         if (!empty($this->search)) {
             $query->where('nama_kolam', 'like', '%' . $this->search . '%');
@@ -150,41 +163,54 @@ class MonitoringKolam extends Page implements HasForms, HasTable
                     ->form([
                         Forms\Components\Hidden::make('kolam_budidaya_id')
                             ->default($this->kolamId),
+
                         Forms\Components\Grid::make(2)->schema([
                             Forms\Components\DateTimePicker::make('tgl_monitoring')
+                                ->label('Tanggal & Waktu Monitoring')
                                 ->columnSpan(2)
                                 ->native(false),
 
                             Forms\Components\TextInput::make('temperature')
+                                ->label('Suhu Air (°C)')
                                 ->numeric(),
 
                             Forms\Components\TextInput::make('ph')
+                                ->label('pH Air')
                                 ->numeric(),
 
                             Forms\Components\TextInput::make('do')
+                                ->label('DO (mg/L)')
                                 ->numeric(),
 
                             Forms\Components\TextInput::make('tds')
+                                ->label('TDS (ppm)')
                                 ->numeric(),
 
                             Forms\Components\TextInput::make('turbidity')
+                                ->label('Kekeruhan (NTU)')
                                 ->numeric(),
 
                             Forms\Components\TextInput::make('humidity')
+                                ->label('Kelembapan (%)')
                                 ->numeric(),
 
                             Forms\Components\TextInput::make('brightness')
+                                ->label('Kecerahan (lux)')
                                 ->numeric(),
 
                             Forms\Components\TextInput::make('amonia')
+                                ->label('Amonia (mg/L)')
                                 ->numeric(),
 
                             Forms\Components\TextInput::make('nitrite')
+                                ->label('Nitrit (mg/L)')
                                 ->numeric(),
 
                             Forms\Components\TextInput::make('nitrate')
+                                ->label('Nitrat (mg/L)')
                                 ->numeric(),
                         ]),
+
                     ])
                     ->action(function (array $data) {
                         KolamMonitoring::create($data);
@@ -199,58 +225,75 @@ class MonitoringKolam extends Page implements HasForms, HasTable
             ->query(KolamMonitoring::query()->where('kolam_budidaya_id', $this->kolamId)->orderBy('created_at', 'desc'))
             ->columns([
                 TextColumn::make('tgl_monitoring')
+                    ->label('Tanggal Monitoring')
                     ->size(TextColumn\TextColumnSize::ExtraSmall)
-                    ->dateTime()
+                    ->dateTime('d M Y H:i') // format lebih ramah pengguna
                     ->wrap()
                     ->searchable()
                     ->sortable(),
+
                 TextColumn::make('temperature')
-                    ->size(TextColumn\TextColumnSize::ExtraSmall)
                     ->label('Suhu (°C)')
-                    ->numeric()
+                    ->size(TextColumn\TextColumnSize::ExtraSmall)
+                    ->numeric(decimalPlaces: 1)
                     ->searchable()
                     ->sortable(),
+
                 TextColumn::make('ph')
-                    ->size(TextColumn\TextColumnSize::ExtraSmall)
                     ->label('pH')
-                    ->numeric()
+                    ->size(TextColumn\TextColumnSize::ExtraSmall)
+                    ->numeric(decimalPlaces: 2)
                     ->searchable()
                     ->sortable(),
+
                 TextColumn::make('do')
-                    ->size(TextColumn\TextColumnSize::ExtraSmall)
                     ->label('DO (mg/L)')
-                    ->numeric()
+                    ->size(TextColumn\TextColumnSize::ExtraSmall)
+                    ->numeric(decimalPlaces: 2)
                     ->sortable(),
+
                 TextColumn::make('tds')
-                    ->label('TDS (mg/L)')
+                    ->label('TDS (ppm)')
                     ->size(TextColumn\TextColumnSize::ExtraSmall)
-                    ->numeric()
+                    ->numeric(decimalPlaces: 0)
                     ->sortable(),
+
                 TextColumn::make('turbidity')
-                    ->label('Turbidity (NTU)')
+                    ->label('Kekeruhan (NTU)')
                     ->size(TextColumn\TextColumnSize::ExtraSmall)
-                    ->numeric()
+                    ->numeric(decimalPlaces: 1)
                     ->sortable(),
+
                 TextColumn::make('humidity')
-                    ->label('Kelembaban (%)')
-                    ->numeric()
+                    ->label('Kelembapan (%)')
+                    ->size(TextColumn\TextColumnSize::ExtraSmall)
+                    ->numeric(decimalPlaces: 1)
                     ->sortable(),
+
                 TextColumn::make('brightness')
-                    ->label('Terang (lux)')
-                    ->numeric()
+                    ->label('Kecerahan (lux)')
+                    ->size(TextColumn\TextColumnSize::ExtraSmall)
+                    ->numeric(decimalPlaces: 0)
                     ->sortable(),
+
                 TextColumn::make('amonia')
                     ->label('Amonia (mg/L)')
-                    ->numeric()
+                    ->size(TextColumn\TextColumnSize::ExtraSmall)
+                    ->numeric(decimalPlaces: 3)
                     ->sortable(),
+
                 TextColumn::make('nitrite')
-                    ->label('Nitrite (mg/L)')
-                    ->numeric()
+                    ->label('Nitrit (mg/L)')
+                    ->size(TextColumn\TextColumnSize::ExtraSmall)
+                    ->numeric(decimalPlaces: 3)
                     ->sortable(),
+
                 TextColumn::make('nitrate')
-                    ->label('Nitrate (mg/L)')
-                    ->numeric()
+                    ->label('Nitrat (mg/L)')
+                    ->size(TextColumn\TextColumnSize::ExtraSmall)
+                    ->numeric(decimalPlaces: 3)
                     ->sortable(),
+
             ])
             ->filters([
                 // ...

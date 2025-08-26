@@ -19,7 +19,7 @@ class DistribusiScheduleResource extends Resource
     protected static ?string $model = DistribusiSchedule::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-calendar';
-
+    protected static bool $shouldRegisterNavigation = false;
     protected static ?string $modelLabel = 'Jadwal Distribusi';
 
     protected static ?string $navigationLabel = 'Jadwal Distribusi';

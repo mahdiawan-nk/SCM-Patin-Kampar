@@ -27,7 +27,11 @@ class KolamBudidayaResource extends Resource
         return $form
             ->schema([
                 Forms\Components\Select::make('pembudidaya_id')
-                    ->relationship('pembudidaya', 'nama_lengkap')
+                ->label('Pembudidaya')
+                    // ->relationship('pembudidaya', 'nama_lengkap')
+                    ->options(\App\Models\Pembudidaya::all()->pluck('nama_lengkap', 'id'))
+                    ->searchable()
+                    ->native(false)
                     ->required(),
                 Forms\Components\TextInput::make('nama_kolam')
                     ->required()

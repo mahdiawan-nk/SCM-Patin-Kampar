@@ -25,25 +25,38 @@ class KolamSiklusResource extends Resource
         return $form
             ->schema([
                 Forms\Components\Select::make('kolam_budidaya_id')
+                    ->label('Kolam Budidaya')
                     ->relationship('kolam_budidaya', 'nama_kolam')
                     ->required(),
+
                 Forms\Components\TextInput::make('strain')
                     ->label('Jenis Ikan')
                     ->maxLength(255),
+
                 Forms\Components\DateTimePicker::make('start_date')
-                ->native(false),
+                    ->label('Tanggal Tebar')
+                    ->native(false),
+
                 Forms\Components\TextInput::make('initial_stock')
+                    ->label('Jumlah Awal (ekor)')
                     ->numeric(),
+
                 Forms\Components\TextInput::make('initial_avg_weight')
+                    ->label('Berat Rata-rata Awal (gram)')
                     ->numeric(),
+
                 Forms\Components\TextInput::make('stocking_density')
+                    ->label('Kepadatan Tebar (ekor/m²)')
                     ->numeric(),
+
                 Forms\Components\Select::make('status')
+                    ->label('Status Siklus')
                     ->options([
                         'berjalan' => 'Berjalan',
                         'selese' => 'Selesai',
                     ])
                     ->required(),
+
             ]);
     }
 
@@ -52,22 +65,39 @@ class KolamSiklusResource extends Resource
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('kolam_budidaya.nama_kolam')
+                    ->label('Kolam Budidaya')
                     ->sortable(),
+
                 Tables\Columns\TextColumn::make('strain')
+                    ->label('Jenis Ikan')
                     ->searchable(),
+
                 Tables\Columns\TextColumn::make('start_date')
-                    ->dateTime()
+                    ->label('Tanggal Tebar')
+                    ->dateTime('d-m-Y H:i')
                     ->sortable(),
+
                 Tables\Columns\TextColumn::make('initial_stock')
-                    ->numeric()
+                    ->label('Jumlah Awal')
+                    ->suffix(' ekor')
+                    ->numeric(decimalPlaces: 0)
                     ->sortable(),
+
                 Tables\Columns\TextColumn::make('initial_avg_weight')
-                    ->numeric()
+                    ->label('Berat Awal Rata-rata')
+                    ->suffix(' gram')
+                    ->numeric(decimalPlaces: 2)
                     ->sortable(),
+
                 Tables\Columns\TextColumn::make('stocking_density')
-                    ->numeric()
+                    ->label('Kepadatan Tebar')
+                    ->suffix(' ekor/m²')
+                    ->numeric(decimalPlaces: 2)
                     ->sortable(),
-                Tables\Columns\TextColumn::make('status'),
+
+                Tables\Columns\TextColumn::make('status')
+                    ->label('Status Siklus'),
+
                 Tables\Columns\TextColumn::make('deleted_at')
                     ->dateTime()
                     ->sortable()

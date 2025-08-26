@@ -18,7 +18,7 @@ class ArmadaDriverResource extends Resource
     protected static ?string $model = ArmadaDriver::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-user-circle';
-
+    protected static bool $shouldRegisterNavigation = false;
     protected static ?string $modelLabel = 'Driver Armada';
 
     protected static ?string $navigationLabel = 'Driver Armada';

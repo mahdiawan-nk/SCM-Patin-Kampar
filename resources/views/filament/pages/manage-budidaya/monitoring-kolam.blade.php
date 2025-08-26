@@ -1,4 +1,5 @@
 <x-filament-panels::page>
+    <x-livewire.loading-overlay /> 
     <div>
         <div class="max-w-full mx-auto mt-1 text-gray-600">
             <div class="flex items-center justify-between text-sm text-gray-600 font-medium">
@@ -7,8 +8,18 @@
                     wire:loading.attr="disabled" wire:target="goToPage">
                     <x-heroicon-o-chevron-left class="inline-block w-4 h-4" />
                 </button>
+                <form class="w-1/3">
+                    <label for="underline_select" class="sr-only">Underline select</label>
+                    <select id="underline_select" wire:model.change="selectPembudidaya"
+                        class="block py-2.5 px-0 w-full text-sm text-gray-500 bg-transparent border-0 border-b-2 border-gray-200 appearance-none dark:text-gray-400 dark:border-gray-700 focus:outline-none focus:ring-0 focus:border-gray-200 peer">
+                        <option value="all">Semua</option>
+                        @foreach ($listPembudidaya as $pembudidaya)
+                            <option value="{{ $pembudidaya->id }}">{{ $pembudidaya->nama_lengkap }}</option>
+                        @endforeach
+                    </select>
+                </form>
                 <input type="text" wire:model.live="search" placeholder="Cari kolam..."
-                    class="w-1/2 px-4 py-2 border rounded shadow-sm focus:outline-none focus:ring focus:border-blue-300">
+                    class="w-1/3 px-4 py-2 border rounded shadow-sm focus:outline-none focus:ring focus:border-blue-300">
                 <button class="px-4 py-2 border rounded-lg duration-150 hover:bg-gray-50"
                     wire:click="goToPage({{ $currentPage + 1 }})" @disabled($currentPage === $this->totalPages)
                     wire:loading.attr="disabled" wire:target="goToPage">
@@ -96,7 +107,7 @@
             </div>
         </section>
     </div>
-
+    {{-- <x-livewire.loading-overlay target="goToMonitoring" message="Processing…"/> --}}
     @if ($kolamId)
         <hr class="h-px my-2 bg-gray-200 border-0 dark:bg-gray-700">
         <section class="">

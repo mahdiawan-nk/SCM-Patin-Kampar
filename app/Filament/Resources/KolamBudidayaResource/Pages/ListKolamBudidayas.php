@@ -40,8 +40,8 @@ class ListKolamBudidayas extends ListRecords
                             KolamBudidaya::factory()
                                 ->count(5) // 3 data per kolam
                                 ->for($pembudidaya)
-                                ->hasKolamMonitoring(10)
-                                ->hasKolamSiklus(10)
+                                ->hasKolamMonitoring(3)
+                                ->hasKolamSiklus(3)
                                 ->create();
                         });
                         Notification::make()

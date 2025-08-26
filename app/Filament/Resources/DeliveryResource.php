@@ -21,7 +21,7 @@ class DeliveryResource extends Resource
     protected static ?string $model = Delivery::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-truck';
-
+    protected static bool $shouldRegisterNavigation = false;
     protected static ?string $modelLabel = 'Pengiriman';
 
     protected static ?string $navigationLabel = 'Manajemen Pengiriman';

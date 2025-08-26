@@ -28,30 +28,53 @@ class KolamMonitoringResource extends Resource
         return $form
             ->schema([
                 Forms\Components\Select::make('kolam_budidaya_id')
+                    ->label('Kolam Budidaya')
                     ->relationship('kolam_budidaya', 'nama_kolam')
                     ->searchable()
                     ->required(),
+
                 Forms\Components\DateTimePicker::make('tgl_monitoring')
+                    ->label('Tanggal Monitoring')
                     ->native(false),
+
                 Forms\Components\TextInput::make('temperature')
+                    ->label('Suhu (°C)')
                     ->numeric(),
+
                 Forms\Components\TextInput::make('ph')
+                    ->label('pH Air')
                     ->numeric(),
+
                 Forms\Components\TextInput::make('do')
+                    ->label('DO (Oksigen Terlarut)')
                     ->numeric(),
+
                 Forms\Components\TextInput::make('tds')
+                    ->label('TDS (Total Padatan Terlarut)')
                     ->numeric(),
+
                 Forms\Components\TextInput::make('turbidity')
+                    ->label('Kekeruhan Air (NTU)')
                     ->numeric(),
+
                 Forms\Components\TextInput::make('humidity')
+                    ->label('Kelembaban Udara (%)')
                     ->numeric(),
+
                 Forms\Components\TextInput::make('brightness')
+                    ->label('Kecerahan Cahaya (lux)')
                     ->numeric(),
+
                 Forms\Components\TextInput::make('amonia')
+                    ->label('Amonia (mg/L)')
                     ->numeric(),
+
                 Forms\Components\TextInput::make('nitrite')
+                    ->label('Nitrit (mg/L)')
                     ->numeric(),
+
                 Forms\Components\TextInput::make('nitrate')
+                    ->label('Nitrat (mg/L)')
                     ->numeric(),
             ]);
     }
@@ -62,57 +85,85 @@ class KolamMonitoringResource extends Resource
             ->defaultGroup('kolam_budidaya.nama_kolam')
             ->columns([
                 Tables\Columns\TextColumn::make('kolam_budidaya.nama_kolam')
+                    ->label('Kolam Budidaya')
                     ->hidden()
                     ->sortable(),
+
                 Tables\Columns\TextColumn::make('tgl_monitoring')
+                    ->label('Tanggal Monitoring')
                     ->size(TextColumn\TextColumnSize::ExtraSmall)
                     ->dateTime()
                     ->sortable(),
+
                 Tables\Columns\TextColumn::make('temperature')
+                    ->label('Suhu')
+                    ->suffix(' °C')
                     ->size(TextColumn\TextColumnSize::ExtraSmall)
-                    ->label('Suhu (°C)')
-                    ->numeric()
+                    ->numeric(decimalPlaces: 2)
                     ->sortable(),
+
                 Tables\Columns\TextColumn::make('ph')
+                    ->label('pH Air')
                     ->size(TextColumn\TextColumnSize::ExtraSmall)
-                    ->label('pH')
-                    ->numeric()
+                    ->numeric(decimalPlaces: 2)
                     ->sortable(),
+
                 Tables\Columns\TextColumn::make('do')
-                ->size(TextColumn\TextColumnSize::ExtraSmall)
-                    ->label('DO (mg/L)')
-                    ->numeric()
+                    ->label('Oksigen Terlarut')
+                    ->suffix(' mg/L')
+                    ->size(TextColumn\TextColumnSize::ExtraSmall)
+                    ->numeric(decimalPlaces: 2)
                     ->sortable(),
+
                 Tables\Columns\TextColumn::make('tds')
-                    ->label('TDS (mg/L)')
+                    ->label('TDS')
+                    ->suffix(' mg/L')
                     ->size(TextColumn\TextColumnSize::ExtraSmall)
-                    ->numeric()
+                    ->numeric(decimalPlaces: 2)
                     ->sortable(),
+
                 Tables\Columns\TextColumn::make('turbidity')
-                    ->label('Turbidity (NTU)')
+                    ->label('Kekeruhan')
+                    ->suffix(' NTU')
                     ->size(TextColumn\TextColumnSize::ExtraSmall)
-                    ->numeric()
+                    ->numeric(decimalPlaces: 2)
                     ->sortable(),
+
                 Tables\Columns\TextColumn::make('humidity')
-                    ->label('Kelembaban (%)')
-                    ->numeric()
+                    ->label('Kelembaban')
+                    ->suffix(' %')
+                    ->size(TextColumn\TextColumnSize::ExtraSmall)
+                    ->numeric(decimalPlaces: 2)
                     ->sortable(),
+
                 Tables\Columns\TextColumn::make('brightness')
-                    ->label('Terang (lux)')
-                    ->numeric()
+                    ->label('Kecerahan Cahaya')
+                    ->suffix(' lux')
+                    ->size(TextColumn\TextColumnSize::ExtraSmall)
+                    ->numeric(decimalPlaces: 2)
                     ->sortable(),
+
                 Tables\Columns\TextColumn::make('amonia')
-                    ->label('Amonia (mg/L)')
-                    ->numeric()
+                    ->label('Amonia')
+                    ->suffix(' mg/L')
+                    ->size(TextColumn\TextColumnSize::ExtraSmall)
+                    ->numeric(decimalPlaces: 2)
                     ->sortable(),
+
                 Tables\Columns\TextColumn::make('nitrite')
-                    ->label('Nitrite (mg/L)')
-                    ->numeric()
+                    ->label('Nitrit')
+                    ->suffix(' mg/L')
+                    ->size(TextColumn\TextColumnSize::ExtraSmall)
+                    ->numeric(decimalPlaces: 2)
                     ->sortable(),
+
                 Tables\Columns\TextColumn::make('nitrate')
-                    ->label('Nitrate (mg/L)')
-                    ->numeric()
+                    ->label('Nitrat')
+                    ->suffix(' mg/L')
+                    ->size(TextColumn\TextColumnSize::ExtraSmall)
+                    ->numeric(decimalPlaces: 2)
                     ->sortable(),
+
                 Tables\Columns\TextColumn::make('deleted_at')
                     ->dateTime()
                     ->sortable()

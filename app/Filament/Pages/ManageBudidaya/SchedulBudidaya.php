@@ -7,7 +7,7 @@ use Filament\Forms\Concerns\InteractsWithForms;
 use Filament\Forms\Contracts\HasForms;
 use Filament\Forms\Form;
 use Filament\Forms;
-use Filament\Forms\Components\{Textarea,TextInput,Select,Radio,DatePicker,TimePicker};
+use Filament\Forms\Components\{Textarea, TextInput, Select, Radio, DatePicker, TimePicker};
 use App\Models\SchedulBudidaya as JadwalBudidaya;
 use App\Models\KolamBudidaya;
 use Livewire\Attributes\On;
@@ -45,13 +45,17 @@ class SchedulBudidaya extends Page implements HasForms
     {
         return $form
             ->schema([
-                Select::make('kolam_budidaya_id')
+                Forms\Components\Select::make('kolam_budidaya_id')
+                    ->label('Kolam Budidaya')
                     ->relationship('kolam_budidaya', 'nama_kolam')
+                    ->searchable()
+                    ->preload()
                     ->columnSpanFull()
                     ->required(),
-                Radio::make('activity_type')
+
+                Forms\Components\Radio::make('activity_type')
+                    ->label('Jenis Aktivitas')
                     ->required()
-                    ->columnSpanFull()
                     ->options([
                         'seed' => 'Seeding',
                         'feed' => 'Feeding',
@@ -60,19 +64,33 @@ class SchedulBudidaya extends Page implements HasForms
                     ])
                     ->descriptions([
                         'seed' => 'Penebaran Benih',
-                        'feed' => 'Pemberian Makanan',
-                        'treatment' => 'Pemberian Obat dan Penanangan',
-                        'harvest' => 'Pengumpulan Hasil (Panen)',
+                        'feed' => 'Pemberian Pakan',
+                        'treatment' => 'Pemberian Obat & Penanganan',
+                        'harvest' => 'Panen Hasil',
                     ])
                     ->columns(2),
-                Textarea::make('title') // Text::make('note')
+
+                Forms\Components\TextInput::make('title')
+                    ->label('Judul Aktivitas')
+                    ->placeholder('Contoh: Pemberian pakan pagi hari')
+                    ->maxLength(255)
                     ->columnSpanFull(),
-                DatePicker::make('schedule_at')
+
+                Forms\Components\DatePicker::make('schedule_at')
+                    ->label('Tanggal Jadwal')
+                    ->displayFormat('d M Y')
                     ->required(),
-                TimePicker::make('reminder_at')
+
+                Forms\Components\TimePicker::make('reminder_at')
+                    ->label('Waktu Pengingat')
+                    ->seconds(false)
                     ->required(),
-                Textarea::make('note') // Forms\Components\Text::make('note')
+
+                Forms\Components\Textarea::make('note')
+                    ->label('Catatan')
+                    ->placeholder('Tambahkan catatan tambahan di sini...')
                     ->columnSpanFull(),
+
 
             ])
             ->columns(2)

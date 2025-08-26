@@ -16,6 +16,7 @@ class Pembudidaya extends Model
     protected $dates = ['deleted_at'];
 
     protected $fillable = [
+        'user_id',
         'nama_lengkap',
         'nik',
         'jenis_kelamin',
@@ -62,5 +63,10 @@ class Pembudidaya extends Model
     public function kolam(): HasMany
     {
         return $this->hasMany(KolamBudidaya::class, 'pembudidaya_id', 'id');
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
     }
 }

@@ -43,9 +43,14 @@ class User extends Authenticatable
         'permissions'          => 'array',
         'email_verified_at'    => 'datetime',
     ];
+
+    public function pembudidaya()
+    {
+        return $this->hasOne(Pembudidaya::class);
+    }
     public function canAccessPanel(Panel $panel): bool
     {
-        
+
 
         return true;
     }

@@ -17,7 +17,8 @@ use Filament\Tables;
 use Filament\Support\Enums\MaxWidth;
 use Filament\Notifications\Notification;
 use Filament\Actions\Action;
-    use Faker\Factory;
+use Faker\Factory;
+use App\Models\Pembudidaya;
 
 class PenebaranBenih extends Page implements HasForms, HasTable
 {
@@ -36,10 +37,13 @@ class PenebaranBenih extends Page implements HasForms, HasTable
     public $perPage = 3;
     public $currentPage = 1;
     public $search = '';
+    public $selectPembudidaya;
+    public $listPembudidaya;
     public function mount(): void
     {
         $this->form->fill();
         $this->dataKolam = KolamBudidaya::withTrashed()->get();
+        $this->listPembudidaya = Pembudidaya::all();
     }
 
     protected function getHeaderActions(): array
@@ -105,6 +109,10 @@ class PenebaranBenih extends Page implements HasForms, HasTable
 
         $query = KolamBudidaya::withTrashed();
 
+        if (!empty($this->selectPembudidaya) && $this->selectPembudidaya != 'all') {
+            $query->where('pembudidaya_id', $this->selectPembudidaya);
+        }
+
         if (!empty($this->search)) {
             $query->where('nama_kolam', 'like', '%' . $this->search . '%');
         }
@@ -120,6 +128,10 @@ class PenebaranBenih extends Page implements HasForms, HasTable
     public function getTotalPagesProperty()
     {
         $query = KolamBudidaya::withTrashed();
+
+        if (!empty($this->selectPembudidaya) && $this->selectPembudidaya != 'all') {
+            $query->where('pembudidaya_id', $this->selectPembudidaya);
+        }
 
         if (!empty($this->search)) {
             $query->where('nama_kolam', 'like', '%' . $this->search . '%');
@@ -173,25 +185,45 @@ class PenebaranBenih extends Page implements HasForms, HasTable
                     ->form([
                         Forms\Components\Hidden::make('kolam_budidaya_id')
                             ->default($this->kolamId),
+
                         Forms\Components\Grid::make(2)->schema([
                             Forms\Components\TextInput::make('strain')
                                 ->label('Jenis Ikan')
+                                ->placeholder('Contoh: Patin Siam')
                                 ->maxLength(255),
+
                             Forms\Components\DateTimePicker::make('start_date')
-                                ->native(false),
+                                ->label('Tanggal Tebar')
+                                ->native(false)
+                                ->required(),
+
                             Forms\Components\TextInput::make('initial_stock')
-                                ->numeric(),
+                                ->label('Jumlah Awal (ekor)')
+                                ->numeric()
+                                ->minValue(1)
+                                ->required(),
+
                             Forms\Components\TextInput::make('initial_avg_weight')
-                                ->numeric(),
+                                ->label('Bobot Rata-rata Awal (gram)')
+                                ->numeric()
+                                ->minValue(0)
+                                ->step(0.01),
+
                             Forms\Components\TextInput::make('stocking_density')
-                                ->numeric(),
+                                ->label('Kepadatan Tebar (ekor/m³)')
+                                ->numeric()
+                                ->minValue(0)
+                                ->step(0.1),
+
                             Forms\Components\Select::make('status')
+                                ->label('Status Budidaya')
                                 ->options([
                                     'berjalan' => 'Berjalan',
-                                    'selese' => 'Selesai',
+                                    'selesai' => 'Selesai', // typo "selese" diperbaiki
                                 ])
                                 ->required(),
                         ]),
+
                     ])
                     ->action(function (array $data) {
                         KolamSiklus::create($data);
@@ -206,30 +238,97 @@ class PenebaranBenih extends Page implements HasForms, HasTable
             ->query(KolamSiklus::query()->where('kolam_budidaya_id', $this->kolamId)->orderBy('created_at', 'desc'))
             ->columns([
                 TextColumn::make('strain')
-                    ->searchable(),
+                    ->label('Jenis Ikan')
+                    ->searchable()
+                    ->wrap(),
+
                 TextColumn::make('start_date')
-                    ->dateTime()
+                    ->label('Tanggal Tebar')
+                    ->dateTime('d M Y') // Format lebih ramah baca
                     ->sortable(),
+
                 TextColumn::make('initial_stock')
+                    ->label('Jumlah Awal (ekor)')
                     ->numeric()
                     ->sortable(),
+
                 TextColumn::make('initial_avg_weight')
-                    ->numeric()
+                    ->label('Bobot Rata-rata Awal (gram)')
+                    ->numeric(decimalPlaces: 2)
                     ->sortable(),
+
                 TextColumn::make('stocking_density')
-                    ->numeric()
+                    ->label('Kepadatan (ekor/m³)')
+                    ->numeric(decimalPlaces: 1)
                     ->sortable(),
+
                 Tables\Columns\SelectColumn::make('status')
+                    ->label('Status')
                     ->options([
                         'berjalan' => 'Berjalan',
                         'selesai' => 'Selesai',
                     ])
+                    ->sortable(),
+
             ])
             ->filters([
                 // ...
             ])
             ->actions([
-                // ...
+                Tables\Actions\EditAction::make()
+                    ->form([
+                        Forms\Components\Hidden::make('kolam_budidaya_id')
+                            ->default($this->kolamId),
+
+                        Forms\Components\Grid::make(2)->schema([
+                            Forms\Components\TextInput::make('strain')
+                                ->label('Jenis Ikan')
+                                ->placeholder('Contoh: Patin Siam')
+                                ->maxLength(255),
+
+                            Forms\Components\DateTimePicker::make('start_date')
+                                ->label('Tanggal Tebar')
+                                ->native(false)
+                                ->required(),
+
+                            Forms\Components\TextInput::make('initial_stock')
+                                ->label('Jumlah Awal (ekor)')
+                                ->numeric()
+                                ->minValue(1)
+                                ->required(),
+
+                            Forms\Components\TextInput::make('initial_avg_weight')
+                                ->label('Bobot Rata-rata Awal (gram)')
+                                ->numeric()
+                                ->minValue(0)
+                                ->step(0.01),
+
+                            Forms\Components\TextInput::make('stocking_density')
+                                ->label('Kepadatan Tebar (ekor/m³)')
+                                ->numeric()
+                                ->minValue(0)
+                                ->step(0.1),
+
+                            Forms\Components\Select::make('status')
+                                ->label('Status Budidaya')
+                                ->options([
+                                    'berjalan' => 'Berjalan',
+                                    'selesai' => 'Selesai', // typo "selese" diperbaiki
+                                ])
+                                ->required(),
+                        ]),
+
+                    ])
+                    ->action(function ($record, array $data) {
+                        KolamSiklus::find($record->id)->update($data);
+                        $this->resetTable();
+                        Notification::make()
+                            ->title('Updated successfully')
+                            ->success()
+                            ->send();
+                    })
+                    ->modalWidth(MaxWidth::Medium),
+                Tables\Actions\DeleteAction::make(),
             ])
             ->bulkActions([
                 // ...

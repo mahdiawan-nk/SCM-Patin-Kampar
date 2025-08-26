@@ -22,6 +22,7 @@ class PackagingBatchManager extends Page implements HasTable, HasForms
     use InteractsWithTable, InteractsWithForms;
 
     protected static ?string $navigationLabel = 'Packaging Batch';
+    protected static bool $shouldRegisterNavigation = false;
     protected static ?string $navigationIcon = 'heroicon-o-archive-box';
     protected static string $view = 'filament.pages.manage-produksi.packaging-batch-manager';
     protected static ?int $navigationSort = 5;

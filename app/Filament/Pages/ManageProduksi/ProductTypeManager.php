@@ -21,6 +21,7 @@ class ProductTypeManager extends Page implements HasTable, HasForms
     use InteractsWithForms;
 
     protected static ?string $navigationIcon = 'heroicon-o-tag';
+    protected static bool $shouldRegisterNavigation = false;
     protected static ?string $title = 'Product Types';
     protected static string $view = 'filament.pages.manage-produksi.product-type-manager';
     protected static ?int $navigationSort = 1;

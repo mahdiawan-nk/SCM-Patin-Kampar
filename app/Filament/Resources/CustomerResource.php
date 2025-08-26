@@ -21,7 +21,7 @@ use Filament\Tables\Enums\FiltersLayout;
 class CustomerResource extends Resource
 {
     protected static ?string $model = Customer::class;
-
+    protected static bool $shouldRegisterNavigation = false;
     protected static ?string $navigationLabel = 'Data Pelangagan';
     protected static ?string $navigationIcon = 'heroicon-o-user-group';
     protected static ?int $navigationSort = 5;

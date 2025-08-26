@@ -1,4 +1,5 @@
 <x-filament-panels::page>
+    <x-livewire.loading-overlay /> 
     <div>
         <div class="max-w-full mx-auto mt-1 text-gray-600">
             <div

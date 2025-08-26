@@ -51,11 +51,12 @@ class PembudidayaResource extends Resource
                                 '2xl' => 4,
                             ])
                             ->maxLength(16),
-                        Forms\Components\Select::make('jenis_kelamin')
+                        Forms\Components\ToggleButtons::make('jenis_kelamin')
                             ->options([
                                 'L' => 'Laki-laki',
                                 'P' => 'Perempuan',
                             ])
+                            ->inline()
                             ->required()
                             ->columnSpan([
                                 'sm' => 2,
@@ -76,6 +77,7 @@ class PembudidayaResource extends Resource
                             ])
                             ->maxLength(255),
                         Forms\Components\TextInput::make('email')
+                            ->required()
                             ->columnSpan([
                                 'sm' => 2,
                                 'xl' => 3,
@@ -109,11 +111,12 @@ class PembudidayaResource extends Resource
                             ->required()
                     ]),
                 Section::make('Data Usaha')
-
+                    ->collapsed()
                     ->schema([
                         Repeater::make('usaha')
                             ->relationship()
                             ->addable(false)
+                            ->deletable(false)
                             ->schema([
                                 Forms\Components\TextInput::make('nama_usaha')
                                     ->required()

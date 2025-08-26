@@ -26,6 +26,7 @@ class QualityControlManager extends Page implements HasTable, HasForms
     use InteractsWithTable, InteractsWithForms;
 
     protected static ?string $navigationIcon = 'heroicon-o-check-badge';
+    protected static bool $shouldRegisterNavigation = false;
     protected static ?string $title = 'Quality Control';
     protected static string $view = 'filament.pages.manage-produksi.quality-control-manager';
     protected static ?int $navigationSort = 6;

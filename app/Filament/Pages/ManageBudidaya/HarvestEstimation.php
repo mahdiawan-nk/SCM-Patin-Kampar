@@ -35,67 +35,82 @@ class HarvestEstimation extends Page implements HasForms, HasTable
             ->headerActions([
                 Tables\Actions\Action::make('Tambah Data')
                     ->form([
-                        Forms\Components\Grid::make(2)->schema([
-                            Forms\Components\Select::make('kolam_budidaya_id')
-                                ->required()
-                                ->label('Kolam Budidaya')
-                                ->options(KolamBudidaya::all()->pluck('nama_kolam', 'id'))
-                                ->reactive()
-                                ->afterStateUpdated(function ($state, callable $set) {}),
-                            Forms\Components\Select::make('kolam_siklus_id')
-                                ->label('Kolam Siklus')
-                                ->required()
-                                ->disabled(function (Get $get) {
-                                    return empty($get('kolam_budidaya_id'));
-                                })
-                                ->options(function (Get $get) {
-                                    $list = [];
-                                    KolamSiklus::where('kolam_budidaya_id', $get('kolam_budidaya_id'))->get()->each(function ($item, $key) use (&$list, $get) {
-                                        $list[$item->id] = $item->strain . ' - Jumlah Benih :' . $item->initial_stock;
-                                    });
-                                    return $list;
-                                })
-                                ->reactive()
-                                ->afterStateUpdated(function ($state, callable $set) {
-                                    $dataStockAwal = KolamSiklus::find($state)->initial_stock;
-                                    $set('stock_awal', $dataStockAwal);
-                                }),
-                            Forms\Components\DatePicker::make('estimation_harvest_at')
-                                ->required()
-                                ->label('Estimasi Tanggal Panen')
-                                ->native(false),
-                            Forms\Components\TextInput::make('stock_awal')
-                                ->required()
-                                ->label('Total Sebar Benih Dalam Kolam')
-                                ->readOnly()
-                                ->numeric(),
-                            Forms\Components\TextInput::make('estimation_harvest_amount')
-                                ->required()
-                                ->label('Estimasi Jumlah Panen Ikan')
-                                ->live(onBlur: true)
-                                ->afterStateUpdated(function ($state, callable $set, callable $get) {
-                                    $dataStockAwal = $get('stock_awal');
-                                    $srEstimate = ($state / $dataStockAwal) * 100;
-                                    $set('estimate_survival_rate', $srEstimate);
-                                })
-                                ->numeric(),
-                            Forms\Components\TextInput::make('estimation_harvest_weight')
-                                ->required()
-                                ->label('Estimasi Berat Ikan Panen')
-                                ->numeric(),
-                            Forms\Components\TextInput::make('estimation_harvest_percentage')
-                                ->required()
-                                ->label('Estimasi Persentase Panen')
-                                ->numeric(),
-                            Forms\Components\TextInput::make('estimate_survival_rate')
-                                ->label('Estimasi Persentase Ikan Tidak Mati')
-                                ->required()
-                                ->readOnly()
-                                ->numeric(),
-                            Forms\Components\Textarea::make('note')
-                                ->label('Catatan')
-                                ->columnSpanFull(),
-                        ]),
+                        Forms\Components\Grid::make(2)
+                            ->schema([
+                                Forms\Components\Select::make('kolam_budidaya_id')
+                                    ->label('Kolam Budidaya')
+                                    ->options(fn() => KolamBudidaya::pluck('nama_kolam', 'id'))
+                                    ->searchable()
+                                    ->preload()
+                                    ->reactive()
+                                    ->required()
+                                    ->afterStateUpdated(function ($state, callable $set) {
+                                        // Reset kolam siklus setiap kali kolam budidaya berubah
+                                        $set('kolam_siklus_id', null);
+                                        $set('stock_awal', null);
+                                    }),
+
+                                Forms\Components\Select::make('kolam_siklus_id')
+                                    ->label('Kolam Siklus')
+                                    ->required()
+                                    ->disabled(fn(Get $get) => empty($get('kolam_budidaya_id')))
+                                    ->options(fn(Get $get) => $get('kolam_budidaya_id')
+                                        ? KolamSiklus::where('kolam_budidaya_id', $get('kolam_budidaya_id'))
+                                        ->get()
+                                        ->mapWithKeys(fn($item) => [
+                                            $item->id => "{$item->strain} - Jumlah Benih: {$item->initial_stock}"
+                                        ])
+                                        : [])
+                                    ->reactive()
+                                    ->afterStateUpdated(function ($state, callable $set) {
+                                        $stockAwal = KolamSiklus::find($state)?->initial_stock;
+                                        $set('stock_awal', $stockAwal);
+                                    }),
+
+                                Forms\Components\DatePicker::make('estimation_harvest_at')
+                                    ->label('Estimasi Tanggal Panen')
+                                    ->native(false)
+                                    ->required(),
+
+                                Forms\Components\TextInput::make('stock_awal')
+                                    ->label('Total Sebar Benih Dalam Kolam')
+                                    ->numeric()
+                                    ->readOnly()
+                                    ->required(),
+
+                                Forms\Components\TextInput::make('estimation_harvest_amount')
+                                    ->label('Estimasi Jumlah Panen Ikan')
+                                    ->numeric()
+                                    ->required()
+                                    ->live(onBlur: true)
+                                    ->afterStateUpdated(function ($state, callable $set, callable $get) {
+                                        $stockAwal = $get('stock_awal') ?: 1; // Hindari pembagian nol
+                                        $srEstimate = ($state / $stockAwal) * 100;
+                                        $set('estimate_survival_rate', round($srEstimate, 2));
+                                    }),
+
+                                Forms\Components\TextInput::make('estimation_harvest_weight')
+                                    ->label('Estimasi Berat Ikan Panen (Kg)')
+                                    ->numeric()
+                                    ->required(),
+
+                                Forms\Components\TextInput::make('estimation_harvest_percentage')
+                                    ->label('Estimasi Persentase Panen (%)')
+                                    ->numeric()
+                                    ->required(),
+
+                                Forms\Components\TextInput::make('estimate_survival_rate')
+                                    ->label('Estimasi Persentase Hidup (%)')
+                                    ->numeric()
+                                    ->readOnly()
+                                    ->required(),
+
+                                Forms\Components\Textarea::make('note')
+                                    ->label('Catatan')
+                                    ->placeholder('Tambahkan catatan tambahan jika perlu...')
+                                    ->columnSpanFull(),
+                            ])
+
                     ])
                     ->action(function (array $data) {
                         EstimasiPanen::create($data);
@@ -146,7 +161,7 @@ class HarvestEstimation extends Page implements HasForms, HasTable
                     ->options(function () {
                         $list = [];
                         KolamSiklus::with('kolam_budidaya')->get()->each(function ($item, $key) use (&$list) {
-                            $list[$item->id] = $item->kolam_budidaya->nama_kolam . '-'.$item->strain . ' - Jumlah Benih :' . $item->initial_stock;
+                            $list[$item->id] = $item->kolam_budidaya->nama_kolam . '-' . $item->strain . ' - Jumlah Benih :' . $item->initial_stock;
                         });
                         return $list;
                     })
@@ -178,67 +193,81 @@ class HarvestEstimation extends Page implements HasForms, HasTable
                         // ...
                     })
                     ->form([
-                        Forms\Components\Grid::make(2)->schema([
-                            Forms\Components\Select::make('kolam_budidaya_id')
-                                ->required()
-                                ->label('Kolam Budidaya')
-                                ->options(KolamBudidaya::all()->pluck('nama_kolam', 'id'))
-                                ->reactive()
-                                ->afterStateUpdated(function ($state, callable $set) {}),
-                            Forms\Components\Select::make('kolam_siklus_id')
-                                ->label('Kolam Siklus')
-                                ->required()
-                                ->disabled(function (Get $get) {
-                                    return empty($get('kolam_budidaya_id'));
-                                })
-                                ->options(function (Get $get) {
-                                    $list = [];
-                                    KolamSiklus::where('kolam_budidaya_id', $get('kolam_budidaya_id'))->get()->each(function ($item, $key) use (&$list, $get) {
-                                        $list[$item->id] = $item->strain . ' - Jumlah Benih :' . $item->initial_stock;
-                                    });
-                                    return $list;
-                                })
-                                ->reactive()
-                                ->afterStateUpdated(function ($state, callable $set) {
-                                    $dataStockAwal = KolamSiklus::find($state)->initial_stock;
-                                    $set('stock_awal', $dataStockAwal);
-                                }),
-                            Forms\Components\DatePicker::make('estimation_harvest_at')
-                                ->required()
-                                ->label('Estimasi Tanggal Panen')
-                                ->native(false),
-                            Forms\Components\TextInput::make('stock_awal')
-                                ->required()
-                                ->label('Total Sebar Benih Dalam Kolam')
-                                ->readOnly()
-                                ->numeric(),
-                            Forms\Components\TextInput::make('estimation_harvest_amount')
-                                ->required()
-                                ->label('Estimasi Jumlah Panen Ikan')
-                                ->live(onBlur: true)
-                                ->afterStateUpdated(function ($state, callable $set, callable $get) {
-                                    $dataStockAwal = $get('stock_awal');
-                                    $srEstimate = ($state / $dataStockAwal) * 100;
-                                    $set('estimate_survival_rate', $srEstimate);
-                                })
-                                ->numeric(),
-                            Forms\Components\TextInput::make('estimation_harvest_weight')
-                                ->required()
-                                ->label('Estimasi Berat Ikan Panen')
-                                ->numeric(),
-                            Forms\Components\TextInput::make('estimation_harvest_percentage')
-                                ->required()
-                                ->label('Estimasi Persentase Panen')
-                                ->numeric(),
-                            Forms\Components\TextInput::make('estimate_survival_rate')
-                                ->label('Estimasi Persentase Ikan Tidak Mati')
-                                ->required()
-                                ->readOnly()
-                                ->numeric(),
-                            Forms\Components\Textarea::make('note')
-                                ->label('Catatan')
-                                ->columnSpanFull(),
-                        ]),
+                        Forms\Components\Grid::make(2)
+                            ->schema([
+                                Forms\Components\Select::make('kolam_budidaya_id')
+                                    ->label('Kolam Budidaya')
+                                    ->options(fn() => KolamBudidaya::pluck('nama_kolam', 'id'))
+                                    ->searchable()
+                                    ->preload()
+                                    ->reactive()
+                                    ->required()
+                                    ->afterStateUpdated(function ($state, callable $set) {
+                                        // Reset kolam siklus setiap kali kolam budidaya berubah
+                                        $set('kolam_siklus_id', null);
+                                        $set('stock_awal', null);
+                                    }),
+
+                                Forms\Components\Select::make('kolam_siklus_id')
+                                    ->label('Kolam Siklus')
+                                    ->required()
+                                    ->disabled(fn(Get $get) => empty($get('kolam_budidaya_id')))
+                                    ->options(fn(Get $get) => $get('kolam_budidaya_id')
+                                        ? KolamSiklus::where('kolam_budidaya_id', $get('kolam_budidaya_id'))
+                                        ->get()
+                                        ->mapWithKeys(fn($item) => [
+                                            $item->id => "{$item->strain} - Jumlah Benih: {$item->initial_stock}"
+                                        ])
+                                        : [])
+                                    ->reactive()
+                                    ->afterStateUpdated(function ($state, callable $set) {
+                                        $stockAwal = KolamSiklus::find($state)?->initial_stock;
+                                        $set('stock_awal', $stockAwal);
+                                    }),
+
+                                Forms\Components\DatePicker::make('estimation_harvest_at')
+                                    ->label('Estimasi Tanggal Panen')
+                                    ->native(false)
+                                    ->required(),
+
+                                Forms\Components\TextInput::make('stock_awal')
+                                    ->label('Total Sebar Benih Dalam Kolam')
+                                    ->numeric()
+                                    ->readOnly()
+                                    ->required(),
+
+                                Forms\Components\TextInput::make('estimation_harvest_amount')
+                                    ->label('Estimasi Jumlah Panen Ikan')
+                                    ->numeric()
+                                    ->required()
+                                    ->live(onBlur: true)
+                                    ->afterStateUpdated(function ($state, callable $set, callable $get) {
+                                        $stockAwal = $get('stock_awal') ?: 1; // Hindari pembagian nol
+                                        $srEstimate = ($state / $stockAwal) * 100;
+                                        $set('estimate_survival_rate', round($srEstimate, 2));
+                                    }),
+
+                                Forms\Components\TextInput::make('estimation_harvest_weight')
+                                    ->label('Estimasi Berat Ikan Panen (Kg)')
+                                    ->numeric()
+                                    ->required(),
+
+                                Forms\Components\TextInput::make('estimation_harvest_percentage')
+                                    ->label('Estimasi Persentase Panen (%)')
+                                    ->numeric()
+                                    ->required(),
+
+                                Forms\Components\TextInput::make('estimate_survival_rate')
+                                    ->label('Estimasi Persentase Hidup (%)')
+                                    ->numeric()
+                                    ->readOnly()
+                                    ->required(),
+
+                                Forms\Components\Textarea::make('note')
+                                    ->label('Catatan')
+                                    ->placeholder('Tambahkan catatan tambahan jika perlu...')
+                                    ->columnSpanFull(),
+                            ])
                     ]),
                 Tables\Actions\DeleteAction::make(),
                 // Tables\Actions\ForceDeleteAction::make(),

@@ -18,7 +18,7 @@ class DeliveryTrackingResource extends Resource
     protected static ?string $model = DeliveryTracking::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-map';
-
+    protected static bool $shouldRegisterNavigation = false;
     protected static ?string $modelLabel = 'Pelacakan Pengiriman';
 
     protected static ?string $navigationLabel = 'Pelacakan Pengiriman';

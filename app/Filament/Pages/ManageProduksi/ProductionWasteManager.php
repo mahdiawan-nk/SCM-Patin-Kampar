@@ -24,6 +24,7 @@ class ProductionWasteManager extends Page implements HasTable, HasForms
     use InteractsWithTable, InteractsWithForms;
 
     protected static ?string $navigationIcon = 'heroicon-o-trash';
+    protected static bool $shouldRegisterNavigation = false;
     protected static ?string $title = 'Production Waste';
     protected static string $view = 'filament.pages.manage-produksi.production-waste-manager';
     protected static ?int $navigationSort = 7;

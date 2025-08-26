@@ -22,6 +22,7 @@ class ProductionPlanManager extends Page implements HasTable, HasForms
     use InteractsWithTable, InteractsWithForms;
 
     protected static ?string $navigationIcon = 'heroicon-o-calendar-days';
+    protected static bool $shouldRegisterNavigation = false;
     protected static string $view = 'filament.pages.manage-produksi.production-plan-manager';
     protected static ?string $title = 'Production Plans';
     protected static ?int $navigationSort = 3;

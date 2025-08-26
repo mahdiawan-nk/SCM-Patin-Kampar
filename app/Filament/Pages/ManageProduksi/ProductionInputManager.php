@@ -21,6 +21,7 @@ class ProductionInputManager extends Page implements HasTable, HasForms
     use InteractsWithTable, InteractsWithForms;
 
     protected static ?string $navigationIcon = 'heroicon-o-archive-box';
+    protected static bool $shouldRegisterNavigation = false;
     protected static string $view = 'filament.pages.manage-produksi.production-input-manager';
     protected static ?string $title = 'Production Inputs';
     protected static ?int $navigationSort = 2;

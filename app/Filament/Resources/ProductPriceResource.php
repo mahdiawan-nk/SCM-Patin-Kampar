@@ -18,7 +18,7 @@ class ProductPriceResource extends Resource
     protected static ?string $model = ProductPrice::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-currency-dollar';
-
+    protected static bool $shouldRegisterNavigation = false;
     protected static ?string $modelLabel = 'Harga Produk';
 
     protected static ?string $navigationLabel = 'Manajemen Harga';
